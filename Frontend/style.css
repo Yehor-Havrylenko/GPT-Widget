@@ -1,0 +1,134 @@
+body {
+    background-color: #1e1e2e;
+    color: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+#chat-container {
+    background-color: #2a2a40;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 400px;
+    max-width: 100%;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear; /* Плавное появление и исчезновение */
+}
+
+#chat-container.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+#chat-header {
+    background: linear-gradient(to right, #4f4fa8, #6f86d6);
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.chat-message.user {
+    background-color: #3e8e41;
+    color: white;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.chat-message.bot {
+    background-color: #5555aa;
+    color: white;
+    align-self: flex-start;
+    text-align: left;
+}
+
+#chat-input-container {
+    display: flex;
+    border-top: 1px solid #444;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: #33334d;
+    color: white;
+    border-radius: 0 0 0 10px;
+}
+
+#send-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #3e8e41;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 0 10px 0;
+    transition: background-color 0.3s;
+}
+
+#send-button:hover {
+    background-color: #36a536;
+}
+
+/* Стили для кнопки */
+#chat-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4f4fa8;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#chat-toggle-button img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Прокрутка для chat-messages */
+#chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
