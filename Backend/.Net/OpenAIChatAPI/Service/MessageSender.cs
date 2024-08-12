@@ -43,13 +43,13 @@ public class MessageSender
             thread = _sessionsThread[sessionId];
             List<MessageContent> messageContent = new List<MessageContent>();
             messageContent.Add(message);
-            var value1 = _assistantClient.CreateMessage(thread, MessageRole.User, messageContent);
-            _assistantClient.GetMessage(thread.Id, value1.Value.Id);
+            _assistantClient.CreateMessage(thread, MessageRole.User, messageContent);
+            value = SendMessageFromThread(thread);
         }
         else
         {
             thread = CreateNewThread(message, sessionId);
-            value = SendMessageFromNewThread(thread);
+            value = SendMessageFromThread(thread);
         }
 
 
@@ -75,7 +75,7 @@ public class MessageSender
         return result;
     }
 
-    private string SendMessageFromNewThread(AssistantThread thread)
+    private string SendMessageFromThread(AssistantThread thread)
     {
         var value = new StringBuilder();
 
