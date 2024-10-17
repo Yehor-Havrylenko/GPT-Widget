@@ -4,19 +4,16 @@ const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 
-// Генерация уникального идентификатора сессии
 function generateSessionId() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 
-// Получение session_id (если сессия уже существует, используем её)
 let sessionId = localStorage.getItem('sessionId');
 if (!sessionId) {
     sessionId = generateSessionId();
     localStorage.setItem('sessionId', sessionId);
 }
 
-// Показ/скрытие чата
 chatToggleButton.addEventListener('click', () => {
     chatContainer.classList.toggle('show');
 });
@@ -34,7 +31,7 @@ sendButton.addEventListener('click', async () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          session_id: sessionId,  // Передаем session_id на сервер
+          session_id: sessionId, 
           message: userMessage
         })
       });
@@ -48,8 +45,8 @@ sendButton.addEventListener('click', async () => {
 
       addChatMessage('bot', decodedMessage);
     } catch (error) {
-      console.error('Ошибка при отправке сообщения:', error);
-      addChatMessage('bot', 'Произошла ошибка. Попробуйте позже.');
+      console.error('Error sending message:', error);
+      addChatMessage('bot', 'An error has occurred. Please try again later.');
     }
   }
 });
