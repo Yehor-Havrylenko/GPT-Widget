@@ -33,5 +33,5 @@ app.MapPost("/chat/sendmessage", async (MessageRequest request, MessageSender ch
     })
     .WithName("SendMessage");
 app.Services.GetRequiredService<MessageSender>().InitializeAsync(Environment.GetEnvironmentVariable("OPENAI_KEY"),
-    Environment.GetEnvironmentVariable("OPENAI_ASISTANT_ID"));
+    Environment.GetEnvironmentVariable("OPENAI_ASSISTANT_ID"));
 app.Run();
