@@ -1,4 +1,3 @@
-# Создание VPC
 resource "aws_vpc" "eks_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -9,24 +8,22 @@ resource "aws_vpc" "eks_vpc" {
   }
 }
 
-# Создание публичных подсетей
 resource "aws_subnet" "public_subnet" {
-  count                   = length(var.public_subnets)
+  count = length(var.public_subnets)
   vpc_id                  = aws_vpc.eks_vpc.id
-  cidr_block              = element(var.public_subnets, count.index)
+  cidr_block = element(var.public_subnets, count.index)
   map_public_ip_on_launch = true
-  availability_zone       = element(var.availability_zones, count.index)
+  availability_zone = element(var.availability_zones, count.index)
 
   tags = {
     Name = "public-subnet-${count.index}"
   }
 }
 
-# Создание приватных подсетей
 resource "aws_subnet" "private_subnet" {
-  count             = length(var.private_subnets)
-  vpc_id            = aws_vpc.eks_vpc.id
-  cidr_block        = element(var.private_subnets, count.index)
+  count = length(var.private_subnets)
+  vpc_id = aws_vpc.eks_vpc.id
+  cidr_block = element(var.private_subnets, count.index)
   availability_zone = element(var.availability_zones, count.index)
 
   tags = {
@@ -34,7 +31,6 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-# Интернет-шлюз для публичных подсетей
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.eks_vpc.id
 
@@ -43,7 +39,6 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# Маршрутизатор для публичных подсетей
 resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.eks_vpc.id
 
@@ -57,14 +52,12 @@ resource "aws_route_table" "public_route_table" {
   }
 }
 
-# Привязка маршрутной таблицы к публичным подсетям
 resource "aws_route_table_association" "public_association" {
-  count          = length(var.public_subnets)
+  count = length(var.public_subnets)
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
-# NAT-шлюз для приватных подсетей
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public_subnet[0].id
@@ -74,11 +67,9 @@ resource "aws_nat_gateway" "nat" {
   }
 }
 
-# EIP для NAT-шлюза
 resource "aws_eip" "nat_eip" {
 }
 
-# Приватная маршрутная таблица для приватных подсетей
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.eks_vpc.id
 
@@ -92,14 +83,12 @@ resource "aws_route_table" "private_route_table" {
   }
 }
 
-# Привязка маршрутной таблицы к приватным подсетям
 resource "aws_route_table_association" "private_association" {
-  count          = length(var.private_subnets)
+  count = length(var.private_subnets)
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_route_table.id
 }
 
-# Создание роли IAM для EKS-кластера
 resource "aws_iam_role" "eks_cluster_role" {
   name = "eks-cluster-role"
 
@@ -117,7 +106,6 @@ resource "aws_iam_role" "eks_cluster_role" {
   })
 }
 
-# Привязка политики к IAM роли для кластера EKS
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
@@ -128,7 +116,6 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
 
-# Создание EKS-кластера
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
@@ -146,7 +133,6 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
-# Создание IAM роли для узлов (Node Group)
 resource "aws_iam_role" "eks_node_group_role" {
   name = "eks-node-group-role"
 
@@ -164,7 +150,6 @@ resource "aws_iam_role" "eks_node_group_role" {
   })
 }
 
-# Привязка политики к роли узлов EKS
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.eks_node_group_role.name
@@ -180,7 +165,6 @@ resource "aws_iam_role_policy_attachment" "eks_ec2_container_registry_policy" {
   role       = aws_iam_role.eks_node_group_role.name
 }
 
-# Создание группы узлов (Node Group)
 resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "eks-node-group"
