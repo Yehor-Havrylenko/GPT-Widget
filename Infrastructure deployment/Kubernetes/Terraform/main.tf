@@ -1,3 +1,6 @@
+locals {
+  iam_policies = jsondecode(file("${path.module}/iam_policies.json"))
+}
 resource "aws_vpc" "eks_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -90,20 +93,8 @@ resource "aws_route_table_association" "private_association" {
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
+  name               = "eks-cluster-role"
+  assume_role_policy = jsonencode(local.iam_policies["eks_cluster_trust_policy"])
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
@@ -134,20 +125,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 }
 
 resource "aws_iam_role" "eks_node_group_role" {
-  name = "eks-node-group-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
+  name               = "eks-node-group-role"
+  assume_role_policy = jsonencode(local.iam_policies["eks_node_group_trust_policy"])
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
