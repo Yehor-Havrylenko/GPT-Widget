@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend
 spec:
-  replicas: 1
+  replicas: {{.Values.frontend.replicaCount}}
   selector:
     matchLabels:
       app: frontend
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: uamgl/gpt-widget-frontend:latest
+          image:  {{.Values.frontend.image}}
           ports:
             - containerPort: 80

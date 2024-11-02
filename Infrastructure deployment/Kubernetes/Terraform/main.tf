@@ -178,6 +178,7 @@ resource "aws_eks_node_group" "eks_node_group" {
   }
 
   instance_types = [var.instance_type]
+  capacity_type  = "SPOT"
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_worker_node_policy,
