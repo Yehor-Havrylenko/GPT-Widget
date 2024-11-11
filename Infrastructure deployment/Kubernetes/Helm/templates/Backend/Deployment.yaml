@@ -17,19 +17,8 @@ spec:
           image: {{.Values.backend.image}}
           ports:
             - containerPort: 5000
-          env:
-            - name: ASPNETCORE_URLS
-              valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: ASPNETCORE_URLS
-            - name: OPENAI_ASSISTANT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: OPENAI_ASSISTANT_ID
-            - name: OPENAI_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: OPENAI_KEY
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets

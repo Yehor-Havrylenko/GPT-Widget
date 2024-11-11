@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  ASPNETCORE_URLS: {{ .Values.config.ASPNETCORE_URLS | quote }}
+  {{- range $key, $value := .Values.env.config }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

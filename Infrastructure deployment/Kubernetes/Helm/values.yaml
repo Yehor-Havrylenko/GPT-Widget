@@ -6,9 +6,9 @@ frontend:
   replicaCount: 1
   image: uamgl/gpt-widget-frontend:latest
 
-config:
-  ASPNETCORE_URLS: "http://+:5000"
-
-secrets:
-  OPENAI_ASSISTANT_ID: "your_assistant_id"
-  OPENAI_KEY: "your_openai_key"
+env:
+  config:
+    ASPNETCORE_URLS: "http://+:5000"
+  secrets:
+    OPENAI_ASSISTANT_ID: "your_assistant_id"
+    OPENAI_KEY: "your_openai_key"
