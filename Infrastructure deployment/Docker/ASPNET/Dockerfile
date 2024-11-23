@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /app
 
-COPY ./../../Backend/OpenAIChatAPI/. ./
+COPY ./../../../Backend/OpenAIChatAPI/. ./
 
 RUN dotnet restore
 

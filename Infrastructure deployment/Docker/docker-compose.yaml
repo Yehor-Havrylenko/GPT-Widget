@@ -3,9 +3,9 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ../
-      dockerfile: Docker/Frontend/Dockerfile
-    image: gpt-widget/frontend:latest
+      context: ./../../
+      dockerfile: "./Infrastructure deployment/Docker/Frontend/Dockerfile"
+    image: uamgl/gpt-widget-frontend:latest
     ports:
       - "80:80"
     depends_on:
@@ -15,9 +15,9 @@ services:
 
   api:
     build:
-      context: ../
-      dockerfile: ./Docker/ASPNET/Dockerfile
-    image: gpt-widget/api:latest
+      context: ./../../
+      dockerfile: "./Infrastructure deployment/Docker/ASPNET/Dockerfile"
+    image: uamgl/gpt-widget-api:latest
     ports:
       - "5000:5000"
     env_file:
