@@ -4,7 +4,7 @@ services:
   frontend:
     build:
       context: ./../../
-      dockerfile: "./Infrastructure deployment/Docker/Frontend/Dockerfile"
+      dockerfile: ./Deployment/Docker/Frontend/Dockerfile
     image: uamgl/gpt-widget-frontend:latest
     ports:
       - "80:80"
@@ -16,7 +16,7 @@ services:
   api:
     build:
       context: ./../../
-      dockerfile: "./Infrastructure deployment/Docker/ASPNET/Dockerfile"
+      dockerfile: ./Deployment/Docker/ASPNET/Dockerfile
     image: uamgl/gpt-widget-api:latest
     ports:
       - "5000:5000"
