@@ -49,3 +49,6 @@ tests/ServiceStack.Redis.Tests/azureconfig.txt
 *.rdb
 *.dat
 *.rdb
+
+Infrastructure deployment/Kubernetes/Terraform/.*
+Infrastructure deployment/Kubernetes/Terraform/terraform*

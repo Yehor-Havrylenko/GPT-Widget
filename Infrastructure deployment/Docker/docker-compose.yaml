@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./../../
+      dockerfile: "./Infrastructure deployment/Docker/Frontend/Dockerfile"
+    image: uamgl/gpt-widget-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: ./../../
+      dockerfile: "./Infrastructure deployment/Docker/ASPNET/Dockerfile"
+    image: uamgl/gpt-widget-api:latest
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
