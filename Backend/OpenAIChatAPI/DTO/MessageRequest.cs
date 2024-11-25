@@ -1,5 +1,7 @@
-﻿public class MessageRequest
+﻿namespace OpenAIChatAPI.DTO;
+
+public class MessageRequest
 {
-    public string session_id { get; set; }
-    public string Message { get; set; }
+    public string session_id { get; }
+    public string Message { get; }
 }

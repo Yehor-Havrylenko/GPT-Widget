@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenAI;
 using OpenAI.Assistants;
+using OpenAIChatAPI.DTO;
 
 namespace Service.Sender
 {
@@ -15,9 +16,11 @@ namespace Service.Sender
         private Assistant _assistant;
         private AssistantClient _assistantClient;
         private Dictionary<string, AssistantThread> _sessionsThread;
+        private bool _debug;
 
-        public async Task InitializeAsync(string apiKey, string assistantId)
+        public async Task InitializeAsync(string apiKey, string assistantId, bool debug = false)
         {
+            _debug = debug;
             try
             {
                 _client = new OpenAIClient(apiKey);
@@ -45,14 +48,14 @@ namespace Service.Sender
 
                 if (_sessionsThread.ContainsKey(sessionId))
                 {
-                    Console.WriteLine("Using existing thread for session: " + sessionId);
+                   if(_debug) Console.WriteLine("Using existing thread for session: " + sessionId);
                     thread = _sessionsThread[sessionId];
                     var messageContent = new List<MessageContent> { message };
                     await _assistantClient.CreateMessageAsync(thread, MessageRole.User, messageContent);
                 }
                 else
                 {
-                    Console.WriteLine("Creating new thread for session: " + sessionId);
+                    if(_debug) Console.WriteLine("Creating new thread for session: " + sessionId);
                     thread = await CreateNewThreadAsync(message, sessionId);
                 }
 
@@ -64,8 +67,7 @@ namespace Service.Sender
                 throw;
             }
 
-            Console.WriteLine($"Sending message: {message}");
-            Console.WriteLine($"Result message: {value}");
+            if(_debug) Console.WriteLine($"Sending message: {message}");
 
             result.response_text = value;
             return string.IsNullOrEmpty(value) ? null : result;
@@ -85,7 +87,7 @@ namespace Service.Sender
 
             var thread = await _assistantClient.CreateThreadAsync(threadOptions);
             _sessionsThread[sessionId] = thread;
-            Console.WriteLine($"Thread {sessionId} is created");
+            if(_debug) Console.WriteLine($"Thread {sessionId} is created");
 
             return thread;
         }
@@ -98,26 +100,26 @@ namespace Service.Sender
             {
                 await foreach (var streamingUpdate in _assistantClient.CreateRunStreamingAsync(thread, _assistant))
                 {
-                    Console.WriteLine($"Streaming update received: {streamingUpdate.GetType().Name}");
+                    if(_debug) Console.WriteLine($"Streaming update received: {streamingUpdate.GetType().Name}");
 
                     if (streamingUpdate.UpdateKind == StreamingUpdateReason.RunCreated)
                     {
-                        Console.WriteLine("--- Run Created ---");
+                        if(_debug) Console.WriteLine("--- Run Created ---");
                     }
 
                     if (streamingUpdate is MessageContentUpdate contentUpdate)
                     {
-                        Console.WriteLine($"Content update received: {contentUpdate.Text}");
+                        if(_debug) Console.WriteLine($"Content update received: {contentUpdate.Text}");
                         value.Append(contentUpdate.Text);
                     }
                     else
                     {
-                        Console.WriteLine($"Unhandled update type: {streamingUpdate}");
+                        if(_debug) Console.WriteLine($"Unhandled update type: {streamingUpdate}");
                     }
                 }
 
                 var responseText = value.ToString();
-                Console.WriteLine($"Final response: {responseText}");
+                if(_debug) Console.WriteLine($"Final response: {responseText}");
                 return responseText;
             }
             catch (Exception ex)
@@ -126,10 +128,5 @@ namespace Service.Sender
                 return string.Empty;
             }
         }
-    }
-
-    public class MessageResponse
-    {
-        public string response_text { get; set; }
     }
 }

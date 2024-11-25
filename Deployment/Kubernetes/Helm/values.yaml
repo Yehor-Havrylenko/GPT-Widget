@@ -9,6 +9,7 @@ frontend:
 env:
   config:
     ASPNETCORE_URLS: "http://+:5000"
+    DEBUG_MODE: "false"
   secrets:
     OPENAI_ASSISTANT_ID: "your_assistant_id"
     OPENAI_KEY: "your_openai_key"
