@@ -13,17 +13,37 @@ services:
     networks:
       - app-network
 
+  mariadb:
+    build:
+      context: ./Mysql
+      dockerfile: ./Dockerfile
+    container_name: chatapp_mariadb
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: always
+    
   api:
     build:
       context: ./../../
       dockerfile: ./Deployment/Docker/ASPNET/Dockerfile
-    image: uamgl/gpt-widget-api:latest
+    #image: uamgl/gpt-widget-api:latest
     ports:
       - "5000:5000"
     env_file:
       - .env
     networks:
       - app-network
+    depends_on:
+      - mariadb
+  
+volumes:
+  db_data:
 
 networks:
   app-network:

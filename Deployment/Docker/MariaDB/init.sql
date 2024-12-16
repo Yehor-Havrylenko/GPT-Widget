@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS SessionThread (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    SessionId VARCHAR(255) NOT NULL,
+    ThreadId VARCHAR(255) NOT NULL UNIQUE,
+    CreatedAt DATETIME NOT NULL,
+    LastAccessedAt DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS CommunicationHistory (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    ThreadId VARCHAR(255) NOT NULL,
+    Message TEXT NOT NULL,
+    Role ENUM('User', 'Bot') NOT NULL,
+    Timestamp DATETIME NOT NULL,
+    FOREIGN KEY (ThreadId) REFERENCES SessionThread(ThreadId) ON DELETE CASCADE
+);
+
