@@ -18,6 +18,7 @@ services:
       context: ./Mysql
       dockerfile: ./Dockerfile
     container_name: chatapp_mariadb
+    image: uamgl/gpt-widget-mariadb:latest
     env_file:
       - .env
     ports:
@@ -32,7 +33,7 @@ services:
     build:
       context: ./../../
       dockerfile: ./Deployment/Docker/ASPNET/Dockerfile
-    #image: uamgl/gpt-widget-api:latest
+    image: uamgl/gpt-widget-api:latest
     ports:
       - "5000:5000"
     env_file:
